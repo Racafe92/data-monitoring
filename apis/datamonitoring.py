@@ -28,11 +28,6 @@ def allowed_file(filename):
 
 @api.route('/', endpoint='data-monitoring')
 class DataMonitoring(Resource):
-    def get(self):
-        data = db.db.data.find()
-        response = json_util.dumps(data)
-        return Response(response, mimetype='application/json')
-
     @api.expect(data_file_parser)
     @api.doc(params={'file': 'A CSV file to parse into Database'})
     def post(self):
@@ -57,15 +52,17 @@ class DataMonitoring(Resource):
         db.db.data.insert_many(digested_csv)
         return "{message: ok, status: 200}"
 
+
 @api.route('/<start_date>/<end_date>')
 class MonitoringDataFinderDate(Resource):
     def get(self, start_date, end_date):
         fetched_data = db.db.data.find({"date": {
-            "$gte": start_date, 
+            "$gte": start_date,
             "$lte": end_date
         }})
         response = json_util.dumps(fetched_data)
         return Response(response, mimetype='application/json')
+
 
 class FileException(werkzeug.exceptions.BadRequest):
     description = 'File not CSV'
