@@ -30,6 +30,8 @@ class DataMonitoring(Resource):
     def get(self):
         return "API ok"
 
+    @api.expect(data_file_parser)
+    @api.doc(params={'file': 'A CSV file to parse into Database'})
     def post(self):
         if 'file' not in request.files:
             raise(FileException)
