@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restx import Resource, Api
-from apis import api
 from setup.setup import app
+from apis import api
 
 api.init_app(app)
 
