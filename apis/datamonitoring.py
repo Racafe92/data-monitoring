@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource
-from flask import request
+from flask import request, Response
 from werkzeug.datastructures import FileStorage
+from bson import json_util
 import werkzeug
 import io
 import csv
@@ -28,7 +29,9 @@ def allowed_file(filename):
 @api.route('/', endpoint='data-monitoring')
 class DataMonitoring(Resource):
     def get(self):
-        return "API ok"
+        data = db.db.data.find()
+        response = json_util.dumps(data)
+        return Response(response, mimetype='application/json')
 
     @api.expect(data_file_parser)
     @api.doc(params={'file': 'A CSV file to parse into Database'})
